@@ -43,7 +43,7 @@ while read link1 link2 link3; do
 	
 	(( round=round+1 )) && wait
 	
-	[[ -f Rice_2nd_half_${round}_chr*.vcf.gz ]] && continue
+	[[ -f Rice_2nd_half_${round}_chr01.vcf.gz ]] && continue
 
 	for file in $tbifiles; do
 		touch $file
