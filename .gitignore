@@ -1,7 +1,5 @@
-<<<<<<< HEAD
 trial*
 *.log
-*.txt
 *.vcf.gz
 *.bref
 *.tbi
@@ -10,9 +8,6 @@ trial*
 genetic.map/
 *.report
 *.size
-=======
-*.vcf.gz
-*.tbi
-*.md5
->>>>>>> 00bde763bd78ff00fa508957c2280af82d6e424e
-
+old_new_sample.txt
+report_aggregate.txt
+sites.txt
