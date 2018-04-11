@@ -1,0 +1,12 @@
+trial*
+*.log
+*.txt
+*.vcf.gz
+*.bref
+*.tbi
+*.record
+*.error
+genetic.map/
+*.report
+*.size
+
