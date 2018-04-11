@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#prep_2nd_half.sh
+#check.sh
 
-# [[ -f downloaded_links.txt ]] && rm -f downloaded_links.txt
+# This is to check and download the individual VCF file that has not been downloaded
 
 count=0
 round=0
@@ -43,9 +43,12 @@ while read link1 link2 link3; do
 	
 	(( round=round+1 )) && wait
 	
+	[[ -f Rice_2nd_half_${round}_chr*.vcf.gz ]] && continue
+
 	for file in $tbifiles; do
 		touch $file
 	done
+
 	for chr in chr{01..12}; do 
 		( bcftools merge -Oz -o Rice_2nd_half_${round}_${chr}.vcf.gz -r $chr $vcffiles; tabix -p vcf Rice_2nd_half_${round}_${chr}.vcf.gz ) &
 	done
@@ -58,7 +61,7 @@ while read link1 link2 link3; do
 done < 2nd_1500_samples.txt
 
 wait
-	
+
 ## when all the downloading processes are finished
 ## start merging them into a single VCF file
 for chr in chr{01..12}; do
