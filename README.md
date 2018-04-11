@@ -10,6 +10,7 @@
 # prep_2nd_half.sh is the shell script used to download and merge the second 1500 individual samples
 
 # mv_1st_half_vcf.sh was used to remove duplicate downloaded VCF files and bring all the unique VCF files together under the current directory
+# merge_1st_half.sh: this shell is to merge all the sub-merged VCF files from the first 1500 samples into one by chromosomes
 
 # check.sh checks if there are undownloaded VCF files and download the undownloaded VCF file(s) accordingly.
 
