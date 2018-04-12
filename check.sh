@@ -43,7 +43,7 @@ while read link1 link2 link3; do
 	
 	(( round=round+1 )) && wait
 	
-	[[ -f Rice_2nd_half_${round}_chr01.vcf.gz ]] && continue
+	[[ -f Rice_2nd_half_${round}_chr01.vcf.gz ]] && ( vcffiles=""; tbifiles=""; count=0 ) && continue
 
 	for file in $tbifiles; do
 		touch $file
@@ -57,7 +57,7 @@ while read link1 link2 link3; do
 	tbifiles=""
 	count=0
 	
-	[[ $round -eq '25' ]] && break
+	[[ $round -lt '25' ]] && continue
 done < 2nd_1500_samples.txt
 
 wait
