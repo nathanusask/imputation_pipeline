@@ -25,24 +25,6 @@ Note:
 from math import sqrt
 from numpy import nanmedian, nanmean
 
-# def calc_correlation(x_arr, y_arr):
-#     assert len(x_arr) == len(y_arr)
-#
-#     sig_x, sig_y, sig_xy, sig_x_2, sig_y_2 = 0.0, 0.0, 0.0, 0.0, 0.0
-#     for x, y in zip(x_arr, y_arr):
-#         sig_x += x
-#         sig_y += y
-#         sig_xy += x*y
-#         sig_x_2 += x*x
-#         sig_y_2 += y*y
-#
-#     n = len(x_arr)
-#     try:
-#         r_ret = (n*sig_xy - sig_x*sig_y)/sqrt((n*sig_x_2 - sig_x*sig_x) * (n*sig_y_2 - sig_y*sig_y))
-#         return r_ret
-#     except:
-#         return
-
 def calc_concordance(x_arr, y_arr):
     assert len(x_arr) == len(y_arr)
 
