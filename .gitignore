@@ -1,4 +1,28 @@
+<<<<<<< HEAD
+trial1.acc_agg.report.txt
+trial1.concordance.txt
+trial1.corr_act_imp_maf.txt
+trial1.correlation.txt
+trial5/
+trial6/
+trial7/
+trial8/
+trial9/
+*.log
+*.vcf.gz
+*.bref
+*.tbi
+*.record
+*.error
+genetic.map/
+*.report
+*.size
+old_new_sample.txt
+report_aggregate.txt
+sites.txt
+=======
 *.vcf.gz
 *.tbi
 *.md5
 
+>>>>>>> 00bde763bd78ff00fa508957c2280af82d6e424e
