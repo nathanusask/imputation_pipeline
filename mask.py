@@ -1,63 +1,75 @@
 #!/usr/bin/python
 
-##this script is to mask vcf file according to certain ratio
+# this script is to mask vcf file at any genetic loci
+# there will be two output files
+# one is the masked VCF file and the other a plain text file recording all the masked SNPs
 
 import argparse
-from math import floor, ceil
 import random
-import subprocess
+import gzip
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--ratio', type=float)
-parser.add_argument('--samples', type=int)
 parser.add_argument('--filename', type=str)
-parser.add_argument('--output', type=str)
+parser.add_argument('--prefix', type=str)
+parser.add_argument('--directory', type=str)
 args = parser.parse_args()
 
-ratio = args.ratio
-samples = args.samples
-import os
-import sys
- 
-if sys.version.startswith("3"):
-    import io
-    io_method = io.BytesIO
-else:
-    import cStringIO
-    io_method = cStringIO.StringIO
+dirname = args.directory if args.directory[-1] == '/' else args.directory + '/'
+fullnm = args.filename
+vcffile = gzip.open(fullnm)
 
-filename = args.filename
-dirname = '/scratch/users/xuy962/trial1/'
-fullnm = dirname + filename
-p = subprocess.Popen(["zcat", fullnm], stdout=subprocess.PIPE)
-fh = io_method(p.communicate()[0])
-assert p.returncode == 0
-output = args.output
-file = open(output, 'w')
-for line in fh:
-	if '#' not in line and line:
-		arr = line.rstrip('\n').split('\t')
-		len_arr = len(arr)
-		if len_arr <= 1:
-			continue
-		target = floor(samples*ratio)
-		tarArr = []
-		count = 0
-	
-		while count < target:
-			tmp = random.randint(9, len_arr-1)
-			if tmp not in tarArr:
-				tarArr.append(tmp)
-				count += 1
-		for index in tarArr:
-			if '|' in arr[index]:
-				arr[index] = '.|.'
-			else:
-				arr[index] = '.'
-		line = '\t'.join(arr)
-		file.write(line+'\n')
-	else:
-		file.write(line)
-file.close()
+output_vcffilename = dirname + args.prefix + '.vcf'
+output_vcffile = open(output_vcffilename, 'w')
+output_mask_filename = dirname + args.prefix + '.mask.txt'
+output_mask_file = open(output_mask_filename, 'w')
 
-print 'Quiting python masking program...'
+header = ['pos', 'MAF', 'masking-rate',
+          'missing-rate-before-masking', 'missing-rate-after-masking',
+          'sample:GT-before-masking']
+
+output_mask_file.write('\t'.join(header) + '\n')
+for line_stream in vcffile:
+    line = line_stream.decode('utf-8')
+    if line[0] == '#':
+        output_vcffile.write(line)
+        continue
+
+    allele_count, allele_1_count = 0, 0
+    arr = line.rstrip('\n').split('\t')
+    arr_masked_snps, arr_s_gt = arr[:9], []
+    masking_rate = random.uniform(0, 1)
+    for idx, record in enumerate(arr[9:]):
+        snp = record.split(':')[0]
+        if snp.find('.') >= 0:
+            arr_masked_snps.append(snp)
+            continue
+        char_split = snp[1]
+        alleles = [int(x) for x in snp.split(char_split)]
+        allele_count += 2
+        allele_1_count += sum(alleles)
+        rdm = random.uniform(0, 1)
+        if rdm < masking_rate:
+            arr_masked_snps.append('./.')
+            arr_s_gt.append("%d:%s" % (idx, snp))
+        else:
+            arr_masked_snps.append(snp)
+
+        pos = arr[1]
+        af = float(allele_1_count) / allele_count
+        maf = af if af < 0.5 else 1 - af
+        n_samples = len(arr_masked_snps) - 9
+        missing_rate_before_masking = 1 - float(allele_count / 2) / n_samples
+        missing_rate_after_masking = 1 - float(allele_count / 2 - len(arr_s_gt)) / n_samples
+        line_output_vcf = '\t'.join(arr_masked_snps)
+        line_output_mask = '\t'.join([
+            str(pos), str(maf), str(masking_rate),
+            str(missing_rate_before_masking), str(missing_rate_after_masking),
+            ';'.join(arr_s_gt)
+        ])
+    output_vcffile.write(line_output_vcf + '\n')
+    output_mask_file.write(line_output_mask + '\n')
+
+vcffile.close()
+output_vcffile.close()
+output_mask_file.close()
+
