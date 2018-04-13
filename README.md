@@ -1,11 +1,15 @@
 # imputation_pipeline
 
+# Author: Nathan Yang
+# Purpose: Master Thesis Project
+
 #This project includes all the shell and python scripts used in my imputation pipeline
 
 # sorted_Rice_download_links.txt contains all the FTP links of the 3000 individual Rice samples
 # 1st_1500_samples.txt contains the FTP links for the first 1500 individual Rice samples
 # 2nd_1500_samples.txt contains the FTP links for the second 1500 individual Rice samples
 
+# ------------------- shell scripts ---------------------
 # prep_1st_half.sh is the shell script used to download and merge the first 1500 individual samples
 # prep_2nd_half.sh is the shell script used to download and merge the second 1500 individual samples
 
@@ -14,3 +18,10 @@
 
 # check.sh checks if there are undownloaded VCF files and download the undownloaded VCF file(s) accordingly.
 
+# ------------------- python scripts ---------------------
+# mask.py: to mask SNPs according to a randomly generated rate (0.0--1.0) at any genetic loci within a target dataset
+#		three mandatory parameters: 	--filename sample.vcf.gz
+#						--prefix output-prefix
+#						--directory output-directory
+#		two files will be generated after running this script:	.vcf		--masked VCF file
+#									.mask.txt	--masking info file (this file should be used to simplify the accuracy evaluation process)
