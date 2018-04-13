@@ -1,34 +1,53 @@
 #!/usr/bin/python
 
-filename = 'samples.txt'
+# this python file is to randomly generate 2 files -- one as reference and the other target
+# input for this script is the directory where the samples.txt is placed
+# for each different separate ratio, make 10 repliates
+
+from sys import argv
+import os
+import errno
+
+dirname = argv[1] if argv[1][-1] == '/' else argv[1]+'/'
+
+filename = dirname + 'samples.txt'
 samples = []
 with open(filename, 'r') as file:
 	for line in file:
-		samples.append(line)
+		samples.append(line.rstrip())
 file.close()
 
-from numpy import random
-from math import floor
-s_rate = [0.9, 0.8, 0.7, 0.6, 0.5]
-new_file_path = 'trial'
-new_filename_head = 'samples.'
-new_filename_tail = '.txt'
-total = len(samples)
+import random
+s_rate = [round(x/10.0, 1) for x in range(5,10)]
+new_file_path_header = ['ref', '', 'tgt', '']
 for rate in s_rate:
-	random.shuffle(samples)
-	num1 = int(floor(total * rate))
-	num2 = int(total - num1)
-	samples1 = samples[0:num1]
-	samples2 = [x for x in samples if x not in samples1]
-	new_file_path = 'trial' + str(int(rate*10)) + '/'
-	new_filename1 = new_file_path + new_filename_head + 'ref' + new_filename_tail
-        new_filename2 = new_file_path + new_filename_head + 'target' + new_filename_tail
-	with open(new_filename1, 'w') as file1:
-		for sample in samples1:
-			file1.write(sample)
-	file1.close()
-	with open(new_filename2, 'w') as file2:
-		for sample in samples2:
-			file2.write(sample)
-	file2.close()
+	ref = int(rate*10)
+	tgt = int(10-ref)
+	new_file_path_header[1] = str(ref)
+	new_file_path_header[3] = str(tgt)
+	new_file_path = dirname + '_'.join(new_file_path_header) + '/'
+	if not os.path.exists(new_file_path):
+		try:
+			os.makedirs(new_file_path)
+		except OSError as exc:
+			if exc.errno != errno.EEXIST:
+				raise
+
+	for rep in range(1,11):
+		new_ref_filename = new_file_path + "rep_%d_ref_samples.txt"%(rep)
+		new_tgt_filename = new_file_path + "rep_%d_tgt_samples.txt"%(rep)
+		s_ref, s_tgt = [], []
+		for sample in samples:
+			rdm = random.uniform(0,1)
+			if rdm > rate:
+				s_tgt.append(sample)
+			else:
+				s_ref.append(sample)
+
+		with open(new_ref_filename, 'w') as ref_file:
+			ref_file.write('\n'.join(s_ref) + '\n')
+		ref_file.close()
+		with open(new_tgt_filename, 'w') as tgt_file:
+			tgt_file.write('\n'.join(s_tgt) + '\n')
+		tgt_file.close()
 
