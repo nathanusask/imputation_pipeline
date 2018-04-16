@@ -27,3 +27,8 @@ sites.txt
 
 >>>>>>> 00bde763bd78ff00fa508957c2280af82d6e424e
 samples.txt
+1001genomes_snp-short-indel_only_ACGTN_v3.1.vcf.genes.txt
+1001genomes_snp-short-indel_only_ACGTN_v3.1.vcf.html
+1001genomes_snp-short-indel_only_ACGTN_v3.1.vcf.snpeff.frq
+1001genomes_snp-short-indel_only_ACGTN_v3.1.vcf.snpeff.gz
+A_thaliana.map
