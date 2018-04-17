@@ -32,3 +32,8 @@ samples.txt
 1001genomes_snp-short-indel_only_ACGTN_v3.1.vcf.snpeff.frq
 1001genomes_snp-short-indel_only_ACGTN_v3.1.vcf.snpeff.gz
 A_thaliana.map
+ref_5_tgt_5_chr1/
+ref_6_tgt_4_chr1/
+ref_7_tgt_3_chr1/
+ref_8_tgt_2_chr1/
+ref_9_tgt_1_chr1/
