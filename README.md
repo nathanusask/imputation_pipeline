@@ -17,6 +17,9 @@
 # merge_1st_half.sh: this shell is to merge all the sub-merged VCF files from the first 1500 samples into one by chromosomes
 
 # check.sh checks if there are undownloaded VCF files and download the undownloaded VCF file(s) accordingly.
+
+# phasing.sh: this shell is to phase reference VCF files with shapeit. the input is the chromosome number in format "chr#", e.g., chr1
+
 # --------------------------------------------------------
 
 # ------------------- python scripts ---------------------
