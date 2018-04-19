@@ -1,16 +1,16 @@
 #!/usr/bin/python
 
 # this python file is to randomly generate 2 files -- one as reference and the other target
-# input for this script is the directory where the samples.txt is placed
+# input for this script is the chromosome number in a format such as 'chr1'
 # for each different separate ratio, make 10 repliates
 
 from sys import argv
 import os
 import errno
 
-dirname = argv[1] if argv[1][-1] == '/' else argv[1]+'/'
+chrom = argv[1]
 
-filename = dirname + 'samples.txt'
+filename = 'samples.txt'
 samples = []
 with open(filename, 'r') as file:
 	for line in file:
@@ -19,13 +19,13 @@ file.close()
 
 import random
 s_rate = [round(x/10.0, 1) for x in range(5,10)]
-new_file_path_header = ['ref', '', 'tgt', '']
+new_file_path_header = ['ref', '', 'tgt', '', chrom]
 for rate in s_rate:
 	ref = int(rate*10)
 	tgt = int(10-ref)
 	new_file_path_header[1] = str(ref)
 	new_file_path_header[3] = str(tgt)
-	new_file_path = dirname + '_'.join(new_file_path_header) + '/'
+	new_file_path = '_'.join(new_file_path_header) + '/'
 	if not os.path.exists(new_file_path):
 		try:
 			os.makedirs(new_file_path)

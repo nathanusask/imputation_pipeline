@@ -1,9 +1,19 @@
 #!/bin/bash
 
-for file in trial*/ref; do
-	bcftools view -c1 -Oz -S $file -o ${file}.vcf.gz chr22.nodup.snp_only.vcf.gz --force-samples &
+originalVCF=$1; shift
+chrom=$1
+for folder in ref_?_tgt_?_$chrom; do
+	for i in {1..10}; do
+		prefix=${folder}/rep_${i}
+		( bcftools view -Oz -o ${prefix}_ref.fmlt5.vcf.gz \
+				-S ${prefix}_ref_samples.txt \
+				-i 'f_missing<0.05' $originalVCF
+		tabix -p vcf ${prefix}_ref.fmlt5.vcf.gz
+		bcftools view -Oz -o ${prefix}_tgt.vcf.gz \
+				-S ${prefix}_tgt_samples.txt \
+				-R ${prefix}_ref.fmlt5.vcf.gz $originalVCF
+		tabix -p vcf ${prefix}_tgt.vcf.gz ) &
+	done
 done
 
-for file in trial*/target; do
-	bcftools view -c1 -Oz -S $file -o ${file}.vcf.gz chr22.nodup.snp_only.vcf.gz --force-samples &
-done
+wait
