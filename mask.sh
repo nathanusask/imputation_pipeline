@@ -1,13 +1,20 @@
 #!/bin/bash
 
-##first input is a gzipped file
-mask_rt=(0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)
-for file in trial*/target.vcf.gz; do
-	filename=$file
+# this script utilizes mask.py to mask all target files under a directory by chromosome number
+# chromosome number should be in format 'chr#', e.g., chr1
 
-#begin to mask...
-#note that the SNP region is in fields 10~9+samples
-	for ratio in ${mask_rt[@]}; do
-		./sub_mask.sh $filename $ratio &
+chrom=$1
+for folder in ref_?_tgt_?_$chrom; do
+	for i in {1..10}; do
+		( prefix=${folder}/rep_$i
+		tgt_file=${prefix}_tgt.vcf.gz
+		tmp=${tgt_file##*/}
+		./mask.py --filename $tgt_file --prefix ${tmp/.vcf.gz/}.mask --directory $folder
+		vcf_masked=${tmp/.vcf.gz/}.mask.vcf
+		bgzip -f ${tmp/.vcf.gz/}.mask.vcf
+		tabix -p vcf ${tmp/.vcf.gz/}.mask.vcf.gz
+		gzip ${tmp/.vcf.gz/}.mask.txt ) &
 	done
 done
+
+wait
