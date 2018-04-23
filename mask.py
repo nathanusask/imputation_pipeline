@@ -20,7 +20,7 @@ vcffile = gzip.open(fullnm)
 
 output_vcffilename = dirname + args.prefix + '.vcf'
 output_vcffile = open(output_vcffilename, 'w')
-output_mask_filename = dirname + args.prefix + '.mask.txt'
+output_mask_filename = dirname + args.prefix + '.txt'
 output_mask_file = open(output_mask_filename, 'w')
 
 header = ['pos', 'MAF', 'masking-rate',
