@@ -11,6 +11,7 @@ for folder in ref_?_tgt_?_$chrom; do
 		ref_file=${prefix}_ref.fmlt5.vcf.gz
 		shapeit -V $ref_file \
 			-O ${ref_file/.vcf.gz/}.shapeit.phased \
+			--thread 8 \
 			--force > ${ref_file/.vcf.gz/}.shapeit.phased.log
 		shapeit -convert \
 			--input-haps ${ref_file/.vcf.gz/}.shapeit.phased \
