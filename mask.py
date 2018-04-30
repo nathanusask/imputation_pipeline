@@ -16,12 +16,12 @@ args = parser.parse_args()
 
 dirname = args.directory if args.directory[-1] == '/' else args.directory + '/'
 fullnm = args.filename
-vcffile = gzip.open(fullnm)
+vcffile = gzip.open(fullnm, 'rb')
 
-output_vcffilename = dirname + args.prefix + '.vcf'
-output_vcffile = open(output_vcffilename, 'w')
-output_mask_filename = dirname + args.prefix + '.txt'
-output_mask_file = open(output_mask_filename, 'w')
+output_vcffilename = dirname + args.prefix + '.vcf.gz'
+output_vcffile = gzip.open(output_vcffilename, 'wb')
+output_mask_filename = dirname + args.prefix + '.txt.gz'
+output_mask_file = gzip.open(output_mask_filename, 'wb')
 
 header = ['pos', 'MAF', 'masking-rate',
           'missing-rate-before-masking', 'missing-rate-after-masking',
@@ -29,7 +29,7 @@ header = ['pos', 'MAF', 'masking-rate',
 
 output_mask_file.write('\t'.join(header) + '\n')
 for line_stream in vcffile:
-    line = line_stream.decode('utf-8')
+    line = line_stream
     if line[0] == '#':
         output_vcffile.write(line)
         continue
