@@ -41,3 +41,4 @@ shapeit*
 test_dump/
 gzip_test.py
 
+*/.vcf.gz
