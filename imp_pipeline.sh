@@ -31,4 +31,32 @@ eagle --geneticMapFile $GENERIC_MAP \
 tabix -p vcf ${phased}.vcf.gz
 
 # Part 3: split samples into reference and target
+samples=sample_ids.txt
+nSamples=$2
+bcftools query -l $phased | tr '\t' '\n' | head -n $nSamples > $samples
+for ref in {5..9}; do
+	tgt=$(( 10-ref ))
+	sub_folder=ref_${ref}_tgt_${tgt}
+	[[ ! -d $sub_folder ]] && mkdir $sub_folder
+	refSamples=$sub_folder/ref_samples.txt
+	tgtSamples=$sub_folder/tgt_samples.txt
+	i=0
+	# split samples into ref and tgt sample files
+	for samp in $(cat $samples); do
+		( (( i%10<ref )) && echo $samp >> $refSamples ) || echo $samp >> $tgtSamples
+	done
+
+	# use bcftools to split the phased VCF into ref and tgt VCF files
+	refVCF=$sub_folder/reference.vcf.gz
+	tgtVCF=$sub_folder/target.vcf.gz
+	bcftools view -Oz -o $refVCF \
+		-S $refSamples \
+		$phased
+	tabix -p vcf $refVCF
+	bcftools view -Oz -o $tgtVCF \
+		-S $tgtSamples \
+		$phased
+	tabix -p vcf $tgtVCF
+
+done
 
