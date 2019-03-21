@@ -15,7 +15,8 @@ module load tabix/0.2.6
 VCF_file=$1
 filtered=${VCF_file/.vcf.gz/.filtered.vcf.gz}
 bcftools view -Oz -o $filtered \
-	-i 'f_missing<0.05 && (TYPE="snp" && STRLEN(REF)=1 && STRLEN(ALT)=1) && MAF[0]>0.005' \
+	-i 'f_missing<0.05 && MAF[0]>0.005' \
+	-m2 -M2 -v snp \
 	$VCF_file
 tabix -p vcf $filtered
 
