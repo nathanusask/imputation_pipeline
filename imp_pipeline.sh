@@ -59,5 +59,9 @@ for ref in {5..9}; do
 		$phased
 	tabix -p vcf $tgtVCF
 
+	# mask SNPs with specific missing rates
+	for mrate in {1..9}; do
+		
+	done
 done
 
