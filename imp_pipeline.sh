@@ -44,6 +44,7 @@ for ref in {5..9}; do
 	# split samples into ref and tgt sample files
 	for samp in $(cat $samples); do
 		( (( i%10<ref )) && echo $samp >> $refSamples ) || echo $samp >> $tgtSamples
+		i=$(( i+1 ))
 	done
 
 	# use bcftools to split the phased VCF into ref and tgt VCF files
