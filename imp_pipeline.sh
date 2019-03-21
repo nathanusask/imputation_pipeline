@@ -23,7 +23,7 @@ tabix -p vcf $filtered
 # Part 2: use Eagle to phase the filtered file
 phased=${filtered/.vcf.gz/.phased}
 eagle --geneticMapFile $GENERIC_MAP \
-	--outputPrefix $phased \
+	--outPrefix $phased \
 	--numThreads 6 \
 	--vcf $filtered \
 	--vcfOutFormat z \
