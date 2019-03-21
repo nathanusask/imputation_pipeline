@@ -7,8 +7,9 @@
 #	 2. single variants
 #	 3. MAF > 0.005
 
-# load bcftools
-module load bcftools
+# load bcftools and tabix
+module load bcftools/1.9
+module load tabix/0.2.6
 
 # take argument from user input
 VCF_file=$1
@@ -16,6 +17,7 @@ filtered=${VCF_file/.vcf.gz/.filtered.vcf.gz}
 bcftools view -Oz -o $filtered \
 	-i 'f_missing<0.05 && (TYPE="snp" && STRLEN(REF)=1 && STRLEN(ALT)=1) && MAF[0]>0.005' \
 	$VCF_file
+tabix -p vcf $filtered
 
 # Part 2: use Eagle to phase the filtered file
 phased=${filtered/.vcf.gz/.phased}
@@ -25,6 +27,7 @@ eagle --geneticMapFile $GENERIC_MAP \
 	--vcf $filtered \
 	--vcfOutFormat z \
 	--allowRefAltSwap
+tabix -p vcf ${phased}.vcf.gz
 
 # Part 3: split samples into reference and target
 
