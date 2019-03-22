@@ -59,9 +59,14 @@ for ref in {5..9}; do
 		$phased
 	tabix -p vcf $tgtVCF
 
-	# mask SNPs with specific missing rates
+	# Part 4: mask SNPs with specific missing rates
+	# TODO: since each masking procedure takes a long time, consider parallelizing the tasks
 	for mrate in {1..9}; do
-		
+		zcat $tgtVCF | while read line; do
+			masked=${tgtVCF/.vcf.gz/}.0.$mrate.vcf.gz
+			[[ -f $masked ]] && rm -f $masked
+			( [[ `cut -c-1 <<< "$line"` == '#' ]] || (( RANDOM%10>=mrate )) ) && ( bgzip -c <<<"$line" >> $masked )
+		done
 	done
 done
 
