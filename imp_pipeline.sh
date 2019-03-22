@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#SBATCH --account=rpp-kasgrid_cpu
+#SBATCH --time=10:00:00
+#SBATCH --job-name=imputation_pipeline_$org_data
+#SBATCH --output=%x.out
+
+
 # imputation pipeline
 
 # Part 1: use bcftools to filter SNPs with following metrics:
